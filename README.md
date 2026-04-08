@@ -1,7 +1,5 @@
 # public_tools
 
-![CI](https://github.com/forechoandlook/public_tools/actions/workflows/ci.yml/badge.svg)
-
 统一发布的二进制工具集合。
 
 ## 工具列表
@@ -12,7 +10,21 @@
 
 ## 下载
 
-前往 [Releases](https://github.com/forechoandlook/public_tools/releases) 下载对应平台的二进制文件。
+前往 [Releases](https://github.com/forechoandlook/public_tools/releases) 下载。
+
+**推荐安装方式：**
+
+```bash
+curl -sL https://raw.githubusercontent.com/forechoandlook/public_tools/main/install.sh | bash
+```
+
+安装脚本会自动检测平台（macOS ARM64、x86_64、Linux x86_64）、检查版本并安装到 `~/.local/bin`。
+
+**已有二进制？直接更新：**
+
+```bash
+./wechat update
+```
 
 ## wechat
 
@@ -22,19 +34,26 @@
 - 群聊管理、朋友圈、收藏、公众号文章
 - Daemon 模式实时推送新消息
 - WAL 增量更新，不重复解密
+- `wechat update` 自更新
 
 ### 使用方法
 
 ```bash
-# 直接查询（自动解密）
 ./wechat sessions --limit 20
 ./wechat history "联系人名" --limit 50
+./wechat update
 
 # 启动 Daemon 实时监控
 ./wechat --log-level debug
-
-# 更多命令
 ./wechat --help
 ```
+
+### 自更新
+
+```bash
+./wechat update
+```
+
+会自动从 `wechat-latest` release 下载最新版本并替换二进制。
 
 详细文档见 [wechat-decrypt-rs](https://github.com/forechoandlook/wechat-decrypt-rs)。
