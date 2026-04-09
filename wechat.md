@@ -18,6 +18,8 @@ wechat update
 
 ## 快速开始
 
+微信必须先re code-sign: `sudo codesign --force --deep --sign - /Applications/WeChat.app`
+
 首次使用需要扫描密钥（微信必须处于运行状态）：
 
 ```bash
