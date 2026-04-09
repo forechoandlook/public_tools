@@ -174,3 +174,6 @@ crates/
 ├── wechat-daemon/     # 主程序：daemon + CLI
 └── wechat-client/     # TCP 客户端库
 ```
+
+## 局限
+解密图片较为复杂，目前已经放弃.
