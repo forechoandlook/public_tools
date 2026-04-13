@@ -8,4 +8,4 @@
 |------|----------|------|------|
 | wechat | [wechat-decrypt-rs](https://github.com/forechoandlook/wechat-decrypt-rs)  private | 微信数据库解密 + CLI 查询工具 [文档](./wechat.md) | `npx skills add forechoandlook/public_tools --skill wechat`|
 | gssh | [gssh](https://github.com/forechoandlook/gssh)  private | 命令行远程连接工具 [文档](./gssh.md) | `npx skills add forechoandlook/public_tools --skill gssh` |
-| opencli | [opencli](https://github.com/forechoandlook/opencli)  public | web/本地信息获取、执行的命令行工具 [文档](./opencli.md) | `npx skills add forechoandlook/public_tools --skill opencli_plus` |
+| opencli_plus | [opencli](https://github.com/forechoandlook/opencli)  public | web/本地信息获取、执行的命令行工具 [文档](./opencli_plus.md) | `npx skills add forechoandlook/public_tools --skill opencli_plus` |
