@@ -6,5 +6,5 @@
 
 | 工具 | 源码仓库 | 功能 | 命令 |
 |------|----------|------|------|
-| wechat | [wechat-decrypt-rs](https://github.com/forechoandlook/wechat-decrypt-rs) | 微信数据库解密 + CLI 查询工具 [文档](./wechat.md) | `npx skills add forechoandlook/public_tools --skill wechat`|
-
+| wechat | [wechat-decrypt-rs](https://github.com/forechoandlook/wechat-decrypt-rs)  private | 微信数据库解密 + CLI 查询工具 [文档](./wechat.md) | `npx skills add forechoandlook/public_tools --skill wechat`|
+| gssh | [gssh](https://github.com/forechoandlook/gssh)  private | 命令行远程连接工具 [文档](./gssh.md) | `npx skills add orechoandlook/public_tools --skill gssh` |
