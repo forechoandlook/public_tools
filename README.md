@@ -2,6 +2,8 @@
 
 统一发布的二进制工具集合。
 
+private 仓库的release 会 copy一份到当前仓库，public的release需要到public仓库获取.
+
 ## 工具列表
 
 | 工具 | 源码仓库 | 功能 | 命令 |
