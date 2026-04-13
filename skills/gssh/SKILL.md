@@ -89,6 +89,7 @@ gssh use --forget prod               # 删除别名
 | `workflow`      | 工作流系统       |
 | `list`          | 列出 session     |
 | `use`           | 管理会话别名     |
+| `feedback`      | 本地反馈记录与 GitHub 上报 |
 
 ## 执行命令
 
@@ -214,25 +215,39 @@ gssh disconnect             # 断开
 gssh reconnect -s <id>     # 重连
 ```
 
-## 选项汇总
+## 反馈与问题报告
 
-| 选项              | 说明                   |
-| ----------------- | ---------------------- |
-| `-s`              | session ID             |
-| `-u`              | 用户名                 |
-| `-h`              | 主机地址               |
-| `-p`              | 端口（默认 22）        |
-| `-P`              | SSH 密码               |
-| `-i`              | SSH 密钥               |
-| `-l`              | 本地端口               |
-| `-r`              | 远程端口               |
-| `-R`              | 远程端口转发           |
-| `-put/-get`       | 上传/下载              |
-| `-t`              | 超时（秒）             |
-| `--sudo`          | 启用 sudo 模式         |
-| `--sudo-password` | sudo 密码              |
-| `--sudo-user`     | 以指定用户运行 sudo    |
-| `--sudo-login`    | sudo login shell（-i） |
+在本地记录遇到的问题，并快速上报到 GitHub：
+
+```bash
+# 记录反馈到 ~/.gssh/feedback.jsonl
+gssh feedback "daemon 重连后端口转发失效"
+gssh feedback --type bug "exec sudo 命令有时挂起"
+gssh feedback --type feature "希望支持 SSH 代理"
+
+# 保存反馈同时打开 GitHub Issue 页面（预填内容）
+gssh feedback --type bug "daemon crash when reconnect" --open
+
+# 仅打开最新反馈对应的 GitHub Issue
+gssh feedback --open
+```
+
+**反馈记录包含：**
+- `id`: 唯一标识（fb_YYYYMMDD_xxxxx）
+- `type`: bug、feature 或 general
+- `description`: 用户描述
+- `version`: gssh 版本信息
+- `os` / `arch`: 操作系统和架构
+- `session_info`: 活跃 session 数（daemon 可用时）
+- `timestamp`: RFC3339 时间戳
+
+**查看本地反馈：**
+```bash
+cat ~/.gssh/feedback.jsonl | jq
+```
+
+**GitHub 上报：**
+`--open` 打开浏览器到 `forechoandlook/public_tools` GitHub Issue 页面，自动预填版本、OS、描述等信息。
 
 ## 限制与注意事项
 
@@ -250,23 +265,7 @@ gssh reconnect -s <id>     # 重连
 
 ### 多行命令处理
 
-**⚠️ 为避免多行命令解析错误，推荐使用单行命令。** 如必须使用多行，改用 shell 脚本：
-
-```bash
-# ❌ 不推荐：多行命令容易出错
-gssh exec "cd /app
-go build
-go test"
-
-# ✅ 推荐方式1：使用 && 连接
-gssh exec "cd /app && go build && go test"
-
-# ✅ 推荐方式2：使用脚本文件
-gssh run build.sh   # build.sh 中包含多行命令
-
-# ✅ 推荐方式3：工作流系统
-gssh workflow run build-deploy
-```
+**⚠️ 为避免多行命令解析错误，推荐使用单行命令。** 如必须使用多行，改用 shell 脚本.
 
 ## 可靠性
 
