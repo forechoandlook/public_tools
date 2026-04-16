@@ -82,10 +82,13 @@ gssh exec "systemctl status nginx"
 #### 2. 直接连接
 
 ```bash
+# 默认密钥认证（自动查找 ~/.ssh/id_ed25519, id_rsa 等默认密钥）
+gssh connect -u admin -h 192.168.1.1
+
 # 密码认证
 gssh connect -u admin -h 192.168.1.1 -p 22 -P "password"
 
-# 密钥认证
+# 密钥认证（显式指定密钥路径）
 gssh connect -u admin -h example.com -i ~/.ssh/id_ed25519
 
 # 指定 session ID
@@ -366,8 +369,8 @@ gssh update
 | `-u user`     | SSH 用户名                               |
 | `-h host`     | 主机地址或 SSH config 中的 host alias   |
 | `-p port`     | SSH 端口（默认：22）                     |
-| `-P password` | SSH 密码                                 |
-| `-i key_path` | SSH 私钥路径                             |
+| `-P password` | SSH 密码（未指定时自动使用默认密钥认证） |
+| `-i key_path` | SSH 私钥路径（未指定时自动查找默认密钥） |
 | `-j jump`     | Jump host（堡垒机）                      |
 | `-ju user`    | Jump host 用户名                         |
 | `-jp port`    | Jump host 端口                           |

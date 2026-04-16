@@ -33,15 +33,20 @@ pm2 start gssh-daemon --name gssh
 ## 连接认证
 
 ```bash
+# 默认密钥认证（自动查找 ~/.ssh/id_ed25519, id_rsa 等默认密钥）
+gssh connect -u user -h host
+
 # 使用密码
 gssh connect -u user -h host -p port -P "password"
 
-# SSH 密钥
+# SSH 密钥（显式指定）
 gssh connect -u user -h host -i ~/.ssh/id_ed25519
 
 # 使用 SSH config 别名（自动读取配置）
 gssh connect my_host_alias
 ```
+
+**默认密钥搜索顺序**: `~/.ssh/id_ed25519` → `~/.ssh/id_rsa` → `~/.ssh/id_ecdsa` → `~/.ssh/id_ecdsa_sk` → `~/.ssh/id_ed25519_sk` → `~/.ssh/id_dsa`
 
 ## 环境变量和密码管理
 
