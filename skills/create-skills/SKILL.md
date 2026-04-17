@@ -21,16 +21,23 @@ Creating effective, token-efficient, and highly reliable SKILL.md files for agen
 name: your-skill-name-in-kebab-case
 description: "Precise: What it does + when to trigger it (include keywords)"
 ---
+## Summary
+- One or two sentences describing the skill's purpose and trigger conditions.
+## 安装卸载
+```bash
+# Installation command
+# Uninstallation command
+```
+## 基础用法
+```bash
+# Example command to trigger the skill
+```
 ## Workflow
-1. Step one...
-2. ...
-
-## Gotchas & Constraints
-- Never...
-- Always check...
-
-## Success Criteria
-- Output must...
+1. 第一步...
+2. 第二步...
+## 注意事项与约束
+- 永远不要...
+- 必须始终检查...
 ```
 
 ## Common Gotchas (Avoid These Mistakes)
@@ -40,17 +47,3 @@ description: "Precise: What it does + when to trigger it (include keywords)"
 - Writing like a blog post instead of SOP (standard operating procedure)
 - No examples or success criteria
 - Overly rigid rules that prevent reasonable flexibility
-
-## Examples
-
-**Bad Skill Description:**
-"Helps with writing skills."
-
-**Good Skill Description:**
-"Generates clean, production-ready React components with TypeScript and Tailwind. Use when user asks for new UI components, component refactoring, or best practices for component design."
-
-**Bad Workflow Step:**
-"Think about the requirements."
-
-**Good Workflow Step:**
-"1. Extract all requirements from user message. 2. Ask clarifying questions only if critical information is missing."
