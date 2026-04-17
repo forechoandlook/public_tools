@@ -1,40 +1,78 @@
 ---
 name: gjules
-description: "gjules CLI, Google's AI coding agent. 连接 GitHub 的仓库，在云端异步地处理任务，如修复 bugs、添加文档和构建新功能。"
+description: "gjules CLI, Google's AI coding agent. 连接 GitHub 的仓库，在云端异步地处理任务，如修复 bugs、添加文档和构建新功能。当用户提及jules、gjules或相关关键词时触发。"
 author: zwy
-version: 0.1.0
+version: 0.6.1
 ---
 install: `curl -sSf https://raw.githubusercontent.com/forechoandlook/gjules/main/install.sh | bash`
 uninstall: `curl -sSf https://raw.githubusercontent.com/forechoandlook/gjules/main/uninstall.sh | bash`
-## Quick Start
+
+## Workflow Quick Start
 ```bash
-# Add your API key
-gjules user add main "your-api-key-here"
-# Set default repo
-gjules sources # list available repos
-gjules repo add myrepo sources/github-... # create alias
-gjules repo use myrepo # set default
-gjules new "Add unit tests for the auth module" # Create a session
-gjules new "prompt" --repo=<alias> #Create session with specific repo
-gjules sources [--fields=...]      #List all sources (repos)
-# Monitor progress
-gjules sessions # list sessions
-gjules msg list <alias> # view activities
-gjules msg send <alias> "Also add integration tests"
-gjules msg approve <alias> # approve plan
-gjules feedback --type=bug "msg" # Append to local JSONL (~/.gjules/feedback.jsonl)
-gjules feedback --open --type=bug # Open GitHub issue with pre-filled content
-# Fields: sessions: alias,id,state,title,created,name; sources:  name,id,owner,repo,branch,alias; msg list: id,originator,description,created,name
+# 1. User & Auth
+gjules user add pro "YOUR_API_KEY"
+gjules user switch pro
+gjules user current                     # Check current user
+
+# 2. Repo Setup
+gjules sources --limit=10               # List available repos from API
+gjules repo add myrepo sources/github/owner/repo 
+gjules repo use myrepo                  # Set default repo for 'new'
+gjules repo list                        # View aliases and current default
+
+# 3. Session Management
+gjules new "Implement a health check"   # Starts session on default repo
+gjules auto_add <repo> "<prompt>"       # Create session by repo name directly
+gjules alias add bug1 <session_id>      # Name your session
+gjules alias use bug1                   # Focus on this session
+gjules msg wait  # Wait for Jules to finish (Beep & Notify!)
+
+# 4. Review & Converse
+gjules msg list                         # View current session activities
+gjules msg list bug1 --git              # View specific session with Diff
+gjules msg send "Fix the naming"        # Send message to current session
+gjules msg approve                      # Approve plan
 ```
+
+## Command Reference
+
+### Quick Session Creation
+- `gjules auto_add <repo> "<prompt>"` : Create a session by repo name — no alias setup needed.
+  - `<repo>` can be any of:
+    - `gssh` — repo name only (matches any owner)
+    - `forechoandlook/gssh` — owner/repo
+    - `https://github.com/forechoandlook/gssh` — full GitHub URL (http/https, trailing slash and `.git` suffix are stripped)
+  - Internally: normalizes the input to `owner/repo` or `repo`, searches the local sources cache for a match, refreshes cache from API if empty or stale (>24h), then calls `new` with the resolved source name.
+  - Optional: `--branch=<name>`, `--auto-pr`
+
+### prompt
+prompt 需要清晰描述任务目标、问题现象或期望变更（例如具体文件路径、错误信息、验收标准），提供足够上下文（如技术栈、现有代码模式、约束条件），并保持任务小而专注（一次最好只处理 1-3 个文件或一个明确功能），避免模糊、大范围或需要实时交互的指令。优先使用正面、具体指令，说明成功标准（如“确保所有测试通过”“遵循项目中现有的错误处理模式”），并建议先让 Jules 输出行动计划供审查。推荐在仓库根目录维护 AGENTS.md 文件说明编码风格和规范，让 Jules 自动参考。
+
+### Session & Alias Management
+- `gjules sessions [--filter=todo|active|done]` : List sessions with status filter and a coarse `next_action` hint.
+- `gjules sessions apply [id] [--dir=/path]` : Check out a local branch named after the session id from the cloud patch base commit, then fetch the latest patch and run local `git apply`.
+- `gjules alias add <name> <id>` : Create a friendly name for a session.
+- `gjules alias list` : Show all session aliases.
+- `gjules alias use <name>` : Set the "Current Session" context.
+
+### Messaging (Current or Specific)
+*Note: [id] is optional if 'alias use' was called.*
+- `gjules msg list [id] [--git] [--detail]` : List logs. `--git` for Diff, `--detail` for Plan descriptions.
+- `gjules msg latest [id] [N]` : Show the latest 1 or N logs for quick reading.
+- `gjules msg latest [id] [N] [--type=code]` : Pair well with code-review flows when you only want the newest patches.
+- `gjules msg send [id] "text"` : Send a message.
+- `gjules msg approve [id]` : Approve a plan.
+- `gjules msg wait [id]` : Block until Jules is ready for input or finished.
+
+### System
+- `gjules version` : Show version.
+- `gjules update` : Self-update.
+
 ## Configuration
-- Env var: `GJULES_API_KEY` takes priority over config file
-- Config: `~/.gjules_config` — multi-user setup with aliases
-```json
-{
-  "users": {"alice": "key1"},
-  "currentUser": "alice",
-  "sessionAlias": {"test1": "abc123"},
-  "repoAlias": {"myrepo": "sources/github-org-repo"},
-  "currentRepo": "sources/github-org-repo"
-}
-```
+- **Structure**: `~/.gjules/` contains `config.json` (global) and `users/<name>/data.json` (user-specific).
+- **Priority**: Environment variable `GJULES_API_KEY` overrides file config.
+
+## Fields Reference
+- **sessions**: `alias,id,state,title,created`
+- **sources**: `alias,id,owner,repo,branch`
+- **msg list**: `originator,content`
