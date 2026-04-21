@@ -73,11 +73,24 @@ gssh run pkg.tar.gz -d /opt --exec "tar xzf pkg.tar.gz && ./install.sh" --cleanu
 ## 文件传输
 
 ```bash
+# 单文件上传/下载
 gssh scp -put local.txt /remote/path/
 gssh scp -get /remote/file.txt ./
-gssh sync -put local_dir /remote/path/
-gssh sync -get /remote/dir ./
+
+# 目录同步（增量，size+mtime 比对）
+gssh sync ./local_dir /remote/path/
+gssh sync ./local_dir /remote/path/ --ignore .gsshignore   # 带忽略规则
 ```
+
+`.gsshignore` 语法（gitignore 子集）：
+```
+# 注释
+*.pyc
+__pycache__/        # 仅匹配目录
+.git/
+config/secret.yaml  # 锚定路径
+```
+source 目录下存在 `.gsshignore` 时自动加载，也可用 `--ignore <file>` 指定。
 
 ## 端口转发
 
