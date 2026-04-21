@@ -120,6 +120,12 @@ gssh -env .env exec --sudo --sudo-user "www-data" "whoami"
 
 # sudo login shell
 gssh -env .env exec --sudo --sudo-login "whoami"
+
+# su 命令（适用于禁用了 sudo 但有 su 的机器）
+gssh exec --su --su-password "password" "whoami"
+gssh -env .env exec --su "systemctl restart nginx"   # .env 中设置 GSSH_SU_PASSWORD
+gssh exec --su --su-user "www-data" --su-password "password" "whoami"
+gssh exec --su --su-login --su-password "password" "whoami"  # su - login shell
 ```
 
 ## 文件上传和执行
@@ -256,11 +262,12 @@ cat ~/.gssh/feedback.jsonl | jq
 
 ## 限制与注意事项
 
-### sudo 限制
+### sudo / su 限制
 
-- **密码不能包含单引号**：`--sudo-password` 中包含单引号会破坏 shell 语法
-- **交互式命令不支持**：`sudo vim`、`sudo less`、`sudo -i`（无密码）等需要 TTY 的命令不支持
+- **密码不能包含单引号**：`--sudo-password` / `--su-password` 中包含单引号会破坏 shell 语法
+- **交互式命令不支持**：`sudo vim`、`sudo less` 等需要 TTY 的命令不支持
 - **sudo 缓存**：sudo 有默认 15 分钟的密码缓存，相同 session 内后续 sudo 命令无需重复输入密码
+- **su PAM 限制**：某些严格 PAM 配置的系统（如 Ubuntu 22.04+）可能要求 su 必须在 TTY 中运行，此时会报 `su: must be run from a terminal`，需改用 sudo 或调整 PAM 配置
 
 ### exec 命令限制
 
